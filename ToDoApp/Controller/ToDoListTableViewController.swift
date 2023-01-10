@@ -9,8 +9,11 @@ import UIKit
 
 class ToDoListTableViewController: UITableViewController {
     
-    var toDoItems = ["Buy vegetables", "Make comunal payment", "Buy something for wife", "Drink Yogurt"]
+    var toDoItems = ["Buy vegetables", "Make comunal payment", "Buy something for wife", "Drink Yogurt", "Buy vegetables", "Make comunal payment", "Buy som for wife", "D Yogurt", "Buy vegetables", "Make coment", "Buy somethwife", "Drint"]
     
+    let defaults = UserDefaults.standard
+    
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -19,8 +22,12 @@ class ToDoListTableViewController: UITableViewController {
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        guard let items = defaults.array(forKey: "ToDoListOfItems") as? [String] else { return }
+        toDoItems = items
     }
     
+    //MARK: - actions
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
@@ -29,6 +36,7 @@ class ToDoListTableViewController: UITableViewController {
         let alertAction = UIAlertAction(title: "Add", style: .default) { action in
             guard let text = textField.text else { return }
             self.toDoItems.append(text)
+            self.defaults.set(self.toDoItems, forKey: "ToDoListOfItems")
             self.tableView.reloadData()
         }
         
