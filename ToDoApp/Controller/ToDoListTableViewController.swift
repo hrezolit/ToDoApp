@@ -7,24 +7,31 @@
 
 import UIKit
 
-class ToDoListTableViewController: UITableViewController {
+final class ToDoListTableViewController: UITableViewController {
     
-    var toDoItems = ["Buy vegetables", "Make comunal payment", "Buy something for wife", "Drink Yogurt", "Buy vegetables", "Make comunal payment", "Buy som for wife", "D Yogurt", "Buy vegetables", "Make coment", "Buy somethwife", "Drint"]
+    var itemArray = [Item]()
     
     let defaults = UserDefaults.standard
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+ 
+        let newItem0 = Item()
+        newItem0.title = "Buy vegetables"
+        itemArray.append(newItem0)
         
-        // Uncomment the following line to preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = false
+        let newItem1 = Item()
+        newItem1.title = "Buy Meat"
+        itemArray.append(newItem1)
         
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        self.navigationItem.rightBarButtonItem = self.editButtonItem
+        let newItem2 = Item()
+        newItem2.title = "Buy Sugar"
+        itemArray.append(newItem2)
         
-        guard let items = defaults.array(forKey: "ToDoListOfItems") as? [String] else { return }
-        toDoItems = items
+        if let items = defaults.array(forKey: "ToDoListOfItems") as? [Item] {
+            itemArray = items
+        }
     }
     
     //MARK: - actions
@@ -32,11 +39,15 @@ class ToDoListTableViewController: UITableViewController {
         
         var textField = UITextField()
         
+        // Alert controller
         let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "Add", style: .default) { action in
+            
             guard let text = textField.text else { return }
-            self.toDoItems.append(text)
-            self.defaults.set(self.toDoItems, forKey: "ToDoListOfItems")
+            let newItem = Item()
+            newItem.title = text
+            self.itemArray.append(newItem)
+            self.defaults.set(self.itemArray, forKey: "ToDoListOfItems")
             self.tableView.reloadData()
         }
         
@@ -50,41 +61,29 @@ class ToDoListTableViewController: UITableViewController {
         present(alert, animated: true)
         
     }
-    
-    // MARK: - Table view data source
-    
+
+    // MARK: - numberOfRowsInSection
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return toDoItems.count
+        return itemArray.count
     }
     
+    // MARK: - cellForRowAt
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        
+        let item = itemArray[indexPath.row]
         var configuration = cell.defaultContentConfiguration()
-        configuration.text = toDoItems[indexPath.row]
+        configuration.text = item.title
         
         cell.contentConfiguration = configuration
+        cell.accessoryType = item.done == true ? .checkmark : .none
         
         return cell
     }
     
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
-    }
-    
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-        
-    }
-
+    // MARK: - didSelectRowAt
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
@@ -93,13 +92,7 @@ class ToDoListTableViewController: UITableViewController {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        tableView.reloadData()
     }
 }
