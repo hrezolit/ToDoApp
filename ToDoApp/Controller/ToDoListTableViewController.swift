@@ -11,12 +11,12 @@ final class ToDoListTableViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
         let newItem0 = Item()
         newItem0.title = "Buy vegetables"
         itemArray.append(newItem0)
@@ -28,10 +28,6 @@ final class ToDoListTableViewController: UITableViewController {
         let newItem2 = Item()
         newItem2.title = "Buy Sugar"
         itemArray.append(newItem2)
-        
-        if let items = defaults.array(forKey: "ToDoListOfItems") as? [Item] {
-            itemArray = items
-        }
     }
     
     //MARK: - actions
@@ -41,14 +37,13 @@ final class ToDoListTableViewController: UITableViewController {
         
         // Alert controller
         let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "Add", style: .default) { action in
+        let alertAction = UIAlertAction(title: "Add", style: .default) { [weak self] action in
             
             guard let text = textField.text else { return }
             let newItem = Item()
             newItem.title = text
-            self.itemArray.append(newItem)
-            self.defaults.set(self.itemArray, forKey: "ToDoListOfItems")
-            self.tableView.reloadData()
+            self?.itemArray.append(newItem)
+            self?.saveItems()
         }
         
         alert.addTextField { alertTF in
@@ -61,7 +56,23 @@ final class ToDoListTableViewController: UITableViewController {
         present(alert, animated: true)
         
     }
-
+    
+    /// Saving data using property list encoder
+    private func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            guard let url = dataFilePath else { return }
+            try data.write(to: url)
+        } catch {
+            print(String(describing: error))
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    
     // MARK: - numberOfRowsInSection
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
@@ -93,6 +104,6 @@ final class ToDoListTableViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        tableView.reloadData()
+        saveItems()
     }
 }

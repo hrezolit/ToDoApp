@@ -31,9 +31,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Do or Diy" id="sN3-Zs-18i">
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="y3c-F6-v49">
+                        <barButtonItem key="rightBarButtonItem" image="plus" catalog="system" id="HKc-Yi-IiM">
                             <connections>
-                                <action selector="addButtonPressed:" destination="eQv-0h-N87" id="NcJ-iV-mVy"/>
+                                <action selector="addButtonPressed:" destination="eQv-0h-N87" id="hB3-6e-tEG"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -70,6 +70,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
