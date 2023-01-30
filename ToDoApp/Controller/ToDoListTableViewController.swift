@@ -6,28 +6,19 @@
 //
 
 import UIKit
+import CoreData
 
 final class ToDoListTableViewController: UITableViewController {
     
     var itemArray = [Item]()
+    let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let newItem0 = Item()
-        newItem0.title = "Buy vegetables"
-        itemArray.append(newItem0)
-        
-        let newItem1 = Item()
-        newItem1.title = "Buy Meat"
-        itemArray.append(newItem1)
-        
-        let newItem2 = Item()
-        newItem2.title = "Buy Sugar"
-        itemArray.append(newItem2)
+
     }
     
     //MARK: - actions
@@ -38,10 +29,10 @@ final class ToDoListTableViewController: UITableViewController {
         // Alert controller
         let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "Add", style: .default) { [weak self] action in
-            
-            guard let text = textField.text else { return }
-            let newItem = Item()
-            newItem.title = text
+            guard let context = self?.context else { return }
+            let newItem = Item(context: context)
+            newItem.title = textField.text
+            newItem.done = false
             self?.itemArray.append(newItem)
             self?.saveItems()
         }
@@ -59,12 +50,9 @@ final class ToDoListTableViewController: UITableViewController {
     
     /// Saving data using property list encoder
     private func saveItems() {
-        let encoder = PropertyListEncoder()
         
         do {
-            let data = try encoder.encode(itemArray)
-            guard let url = dataFilePath else { return }
-            try data.write(to: url)
+            try context?.save()
         } catch {
             print(String(describing: error))
         }
