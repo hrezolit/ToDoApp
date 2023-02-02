@@ -12,20 +12,35 @@ final class ToDoListTableViewController: UITableViewController {
     
     private var itemArray = [Item]()
     private let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+    private let request: NSFetchRequest<Item> = Item.fetchRequest()
+    
+    private var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.barStyle = .default
+        searchBar.autocapitalizationType = .none
+        searchBar.placeholder = "Search..."
+        searchBar.sizeToFit()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        return searchBar
+    }()
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Data base file path
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist") as Any)
+        // add search bar
+        navigationItem.titleView = searchBar
+        navigationItem.titleView?.isHidden = false
+        
+        searchBar.delegate = self
         
         loadData()
     }
     
-    //MARK: - actions
+    //MARK: - actions:
+    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-        
         addAlertController(title: "Add new item", buttonTitle: "Add", placeholderText: "Write new item here")
     }
     
@@ -62,6 +77,16 @@ final class ToDoListTableViewController: UITableViewController {
         present(alert, animated: true)
     }
     
+    // MARK: - Constraints:
+    
+    private func addConstraints() {
+        NSLayoutConstraint.activate([
+            
+            searchBar.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
     // MARK: - Methods for Core Data manipulations:
     
     /// Saving data
@@ -76,8 +101,8 @@ final class ToDoListTableViewController: UITableViewController {
     }
     
     /// Loading data
-    private func loadData() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    private func loadData(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+
         do {
             guard let context else { return }
             itemArray = try context.fetch(request)
@@ -86,12 +111,14 @@ final class ToDoListTableViewController: UITableViewController {
         }
     }
     
-    // MARK: - numberOfRowsInSection
+    // MARK: - Delegate & DataSource:
+    
+    // numberOfRowsInSection
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
     
-    // MARK: - edit for row
+    // edit for row
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -105,12 +132,12 @@ final class ToDoListTableViewController: UITableViewController {
         }
     }
     
-    // MARK: - titleForDeleteConfirmationButtonForRowAt
+    // titleForDeleteConfirmationButtonForRowAt
     override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "Remove"
     }
     
-    // MARK: - cellForRowAt
+    // cellForRowAt
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         let item = itemArray[indexPath.row]
@@ -123,7 +150,7 @@ final class ToDoListTableViewController: UITableViewController {
         return cell
     }
     
-    // MARK: - didSelectRowAt
+    // didSelectRowAt
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
@@ -137,5 +164,30 @@ final class ToDoListTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         saveData()
+    }
+}
+
+extension ToDoListTableViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+         
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadData(with: request)
+        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0 {
+            loadData()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+            tableView.reloadData()
+        }
     }
 }
