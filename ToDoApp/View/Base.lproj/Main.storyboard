@@ -40,7 +40,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t2m-az-Mx3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="939.69465648854953" y="14.788732394366198"/>
+            <point key="canvasLocation" x="816" y="14"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="GkA-H1-hGb">
@@ -61,12 +61,50 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="eQv-0h-N87" kind="relationship" relationship="rootViewController" id="JTq-V7-ln6"/>
+                        <segue destination="CHw-H7-7Ho" kind="relationship" relationship="rootViewController" id="GUe-tX-Gkq"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LLH-L9-yYq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12.977099236641221" y="14.788732394366198"/>
+            <point key="canvasLocation" x="-1508" y="14"/>
+        </scene>
+        <!--Do or Diy-->
+        <scene sceneID="ZCi-Ob-GX0">
+            <objects>
+                <tableViewController id="CHw-H7-7Ho" customClass="CategoryTableViewController" customModule="ToDoApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="ybI-Kc-4Bb">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ToDoCategoriesCell" id="NAH-jl-roO">
+                                <rect key="frame" x="0.0" y="50" width="430" height="43.666667938232422"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NAH-jl-roO" id="uEs-xv-ZEt">
+                                    <rect key="frame" x="0.0" y="0.0" width="430" height="43.666667938232422"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="CHw-H7-7Ho" id="DZ3-6Q-4k8"/>
+                            <outlet property="delegate" destination="CHw-H7-7Ho" id="Hnk-2u-Wum"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Do or Diy" id="IAE-Cx-zwa">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="7e3-Ja-bZP">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="CHw-H7-7Ho" id="iDE-43-iS4"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="eQv-0h-N87" kind="show" identifier="goToItems" id="Gsh-aE-hHy"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jO9-jh-GUf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-406" y="14"/>
         </scene>
     </scenes>
     <resources>

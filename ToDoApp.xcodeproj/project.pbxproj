@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D546D441299CC36B00EFB2A8 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D546D440299CC36B00EFB2A8 /* CategoryTableViewController.swift */; };
 		D5B58E672987BEE80050F84D /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D5B58E652987BEE80050F84D /* DataModel.xcdatamodeld */; };
 		D5D288B22955521C00814E65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D288B12955521C00814E65 /* AppDelegate.swift */; };
 		D5D288B42955521C00814E65 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D288B32955521C00814E65 /* SceneDelegate.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D546D440299CC36B00EFB2A8 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		D5B58E662987BEE80050F84D /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		D5D288AE2955521C00814E65 /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5D288B12955521C00814E65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		D5FB530F296D45D300C05344 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D546D440299CC36B00EFB2A8 /* CategoryTableViewController.swift */,
 				D5D288C52956B21800814E65 /* ToDoListTableViewController.swift */,
 			);
 			path = Controller;
@@ -175,6 +178,7 @@
 			files = (
 				D5D288B22955521C00814E65 /* AppDelegate.swift in Sources */,
 				D5B58E672987BEE80050F84D /* DataModel.xcdatamodeld in Sources */,
+				D546D441299CC36B00EFB2A8 /* CategoryTableViewController.swift in Sources */,
 				D5D288C62956B21800814E65 /* ToDoListTableViewController.swift in Sources */,
 				D5D288B42955521C00814E65 /* SceneDelegate.swift in Sources */,
 			);
