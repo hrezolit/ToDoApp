@@ -8,13 +8,14 @@
 import UIKit
 import CoreData
 
-class CategoryTableViewController: UITableViewController {
+final class CategoryTableViewController: UITableViewController {
     
     private var categories = [Category]()
     private let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     private let request: NSFetchRequest<Category> = Category.fetchRequest()
     
     private var searchBar: UISearchBar = {
+        
         let searchBar = UISearchBar()
         searchBar.barStyle = .default
         searchBar.autocapitalizationType = .none
@@ -25,6 +26,8 @@ class CategoryTableViewController: UITableViewController {
         return searchBar
     }()
     
+    //MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,9 +36,12 @@ class CategoryTableViewController: UITableViewController {
         navigationItem.titleView?.isHidden = false
         navigationController?.title = "ToDoApp"
         searchBar.delegate = self
+        
+        loadData()
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
         addAlertController(title: "Add new category",
                            buttonTitle: "Add",
                            placeholderText: "Write new category here")
@@ -77,9 +83,12 @@ class CategoryTableViewController: UITableViewController {
     
     /// Saving data
     private func saveData() {
+        
         do {
+            
             try context?.save()
         } catch {
+            
             print(String(describing: error))
         }
         self.tableView.reloadData()
@@ -87,10 +96,13 @@ class CategoryTableViewController: UITableViewController {
     
     /// Loading data
     private func loadData(with request: NSFetchRequest<Category> = Category.fetchRequest()) {
+        
         do {
+            
             guard let context else { return }
             categories = try context.fetch(request)
         } catch {
+            
             print(String(describing: error))
         }
     }
@@ -99,24 +111,27 @@ class CategoryTableViewController: UITableViewController {
     
     // numberOfRowsInSection
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         return categories.count
     }
     
     // edit for row
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
+            
             // Delete the row from the data source
             context?.delete(categories[indexPath.row])
             categories.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
             saveData()
-            
         }
     }
     
     // titleForDeleteConfirmationButtonForRowAt
     override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        
         return "Remove"
     }
     
@@ -142,6 +157,7 @@ class CategoryTableViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         let destinationVC = segue.destination as? ToDoListTableViewController
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         destinationVC?.selectedCategory = categories[indexPath.row]
@@ -150,12 +166,14 @@ class CategoryTableViewController: UITableViewController {
 
 // MARK: - extensions:
 
+
+// Search bar delegate
 extension CategoryTableViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
         guard let text = searchBar.text else { return }
         request.predicate = NSPredicate(format: "name CONTAINS[cd] %@", text)
-        
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         loadData(with: request)
@@ -165,11 +183,12 @@ extension CategoryTableViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         if searchBar.text?.count == 0 {
+            
             loadData()
+            
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-            
             tableView.reloadData()
         }
     }
